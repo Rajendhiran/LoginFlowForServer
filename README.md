@@ -128,7 +128,25 @@ form-data:
 
 Client side does not need to supply `client_id` and `client_secret`, and the app in `/oauth/applications` is not needed to be created.
 
+Below is the default response after successfully & unsuccessfully requesting token:
 
+HTTP status: `200`
+```json
+{
+  "access_token": "fc9f440034c112bfc3ca8d43d0c7fdae0eb1c1ea5d3f7c0afdd2f9451c8906cc",
+  "token_type": "bearer",
+  "expires_in": 2592000,
+  "created_at": 1428481781
+}
+```
+
+HTTP status: `401`
+```json
+{
+  "error": "invalid_grant",
+  "error_description": "The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client."
+}
+```
 
 
 
