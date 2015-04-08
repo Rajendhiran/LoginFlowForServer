@@ -62,7 +62,7 @@ This login is through `email/password`.
 ```
 
 Email login's parameters:
-* `email`
+* `username`: this is an email. The reason we use the parameter name as `username` instead of `email` is that standard OAuth specs and other implementation use `username`, and therefore this is for consistency purpose.
 * `password`
 
 ### Consistent Fields in `users` Table
