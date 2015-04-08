@@ -64,3 +64,49 @@ This login is through `email/password`.
 Email login's parameters:
 * `email`
 * `password`
+
+
+
+## Implementation
+The flow of this login is supposed to be used or referenced by any server side framework.
+
+### Rails implementation
+To Simplify the process, we use two gems
+* [Devise](https://github.com/plataformatec/devise): Authentication for Rails application
+* [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper): OAuth2 resource provider
+
+In `Gemfile`, you can just use it as
+```ruby
+source 'https://rubygems.org'
+# other gems here
+gem 'devise'
+gem 'doorkeeper'
+```
+
+After `bundle install`, you can follow the instructions in both gems. The instruction below will asuume that you follow the following settings:
+
+```bash
+$> rails generate devise:install
+$> rails generate devise user
+$> rails generate doorkeeper:install
+$> rake db:migrate
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=====
