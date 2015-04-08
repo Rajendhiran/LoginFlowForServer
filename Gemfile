@@ -47,3 +47,4 @@ end
 
 gem 'doorkeeper'
 gem 'devise'
+gem 'koala'

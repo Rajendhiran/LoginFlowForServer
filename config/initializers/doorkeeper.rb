@@ -20,8 +20,13 @@ Doorkeeper.configure do
   # end
 
   resource_owner_from_credentials do |routes|
-    user = User.find_by_email params[:username]
-    user if user && user.valid_password?(params[:password])
+    if params[:facebook_token]
+      user = Facebook.authenticate(params[:facebook_token])
+      user if user.present?
+    else
+      user = User.find_by_email params[:username]
+      user if user && user.valid_password?(params[:password])
+    end
   end
 
   # Authorization Code expiration time (default 10 minutes).

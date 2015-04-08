@@ -65,9 +65,13 @@ Email login's parameters:
 * `email`
 * `password`
 
+### Consistent Fields in `users` Table
+You have the choice to do whatever you want, but it will be very inconsistent with code used in this document, and therefore we suggest that you stick to the following names:
+* The table of `user` model is `models` (model as `User`). You can define something else like `member`, but it's not recommended here.
+* The required fields in this `users` table are `email` and `fid` (facebook id as string). You can define social network table as an association for extensibility purpose in order to use other third party authentications, but we will focus on facebook integration which is hard wired in this table.
 
 ### Other 3<sup>rd</sup> Party Login
-
+Our goal here is to support Facebook and Email/Password, and therefore other third party authentications such Twitter or Google is considered as further customization.
 
 ## Implementation
 The flow of this login is supposed to be used or referenced by any server side framework.
@@ -110,8 +114,14 @@ Newer version of devise don't provide `authenticate!` anymore. But you can use s
 ```ruby
 Doorkeeper.configure do
   resource_owner_from_credentials do |routes|
-    user = User.find_by_email params[:username]
-    user if user && user.valid_password?(params[:password])
+    if params[:facebook_token]
+      # we use Facebook helper here which can be found in app/services/facebook.rb
+      user = Facebook.authenticate(params[:facebook_token])
+      user if user.present?
+    else
+      user = User.find_by_email params[:username]
+      user if user && user.valid_password?(params[:password])
+    end
   end
 end
 ```
