@@ -9,4 +9,7 @@ class HomeController < ApplicationController
 
   def unprotected_page
   end
+
+  def successful_password_reset
+  end
 end

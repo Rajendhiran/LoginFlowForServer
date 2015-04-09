@@ -73,6 +73,20 @@ You have the choice to do whatever you want, but it will be very inconsistent wi
 ### Other 3<sup>rd</sup> Party Login
 Our goal here is to support Facebook and Email/Password, and therefore other third party authentications such Twitter or Google is considered as further customization.
 
+
+### Resetting Password
+This happens when user requests for *forget password* feature. The flow of this is that `client` mobile application calls forgetting password api which in turn sends out email to the user to verify authenticity of request. This is as far as the client app does the job, and the rest will be based upon web interface.
+
+```
+1. App requests password change (through api) to server.
+2. Server sends out email for user to verify
+3. User receives email and activates the link
+4. User (standing on the page from previous clicked email link) changes the new password.
+5. The page shows 'success action' and does nothing else
+6. User needs to switch to the app manually
+```
+
+
 ## Implementation
 The flow of this login is supposed to be used or referenced by any server side framework.
 
@@ -159,11 +173,57 @@ HTTP status: `401`
 ```
 
 
+### Resetting Password for `Devise`
+We can implement resetting password in `devise` by using controller `PasswordsController` and views `passwords`. This is **NOT** to be confused with *editing password once user logged in* in system. Editing password is not Resetting password, and editing password is a web feature; thus it needs to be configured with controller `RegistrationsController`. Before you can edit/customize controller or view, you need to generate both of them as following:
+
+```bash
+$> rails generate devise:views # generate default views folder 'app/views/devise'
+$> rails generate devise:views users # generate views folder 'app/views/users'
+$> rails generate devise:views admins # generate views folder 'app/views/admin'
+```
+
+If you have more than one Devise model in your application (such as `User` and `Admin`), you will notice that Devise uses the same views for all models. Fortunately, Devise offers an easy way to customize views. All you need to do is set `config.scoped_views = true` inside the `config/initializers/devise.rb` file.
+
+After doing so, you will be able to have views based on the role like `users/sessions/new` and `admins/sessions/new`. If no view is found within the scope, Devise will use the default view at `devise/sessions/new`.
+
+To generate controller with scope, you can use:
+
+```
+rails generate devise:controllers [scope]
+```
+Example:
+
+```bash
+$> rails generate devise:controllers custom_devise # this will scope all controllers (confirmations, passwords, ...) in app/controllers/custom_devise
+```
+
+So for resetting password, you might only need to care about view file `app/views/devise/passwords/edit.html.erb` and controller `app/controller/custom_devise/passwords_controller.rb`. You can edit the view file in such a way to satisfy the design. Do remember to consider exception summary.
+
+By default behavior of devise after correctly resetting password, it will redirected the user to last visited page or root page; therefore, we need to update this in order to comply above description of resetting password in general by displaying successful message and do nothing else after successfully resetting the password.
+
+First of all, we need to set `config/routes.rb` to consume `app/controllers/custom_devise/passwords_controller.rb`:
+
+```ruby
+Rails.application.routes.draw do
+  devise_for :users, controllers: {
+    passwords: "custom_devise/passwords" # to use customize passwords controller
+  }
+  get 'successful_password_reset' => 'home#successful_password_reset' # you customize this to whatever you want.
+end
+```
+
+In `app/controllers/custom_devise/passwords_controller.rb`, you can just update method `after_resetting_password_path_for`:
 
 
+```ruby
+## originally commented out
+# def after_resetting_password_path_for(resource)
+#   super(resource)
+# end
 
-
-
-
+def after_resetting_password_path_for(resource)
+  successful_password_reset_path # set the path you want to redirect after successfully resetting the password.
+end
+```
 
 =====
