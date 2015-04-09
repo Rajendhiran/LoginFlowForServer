@@ -86,6 +86,30 @@ This happens when user requests for *forget password* feature. The flow of this 
 6. User needs to switch to the app manually
 ```
 
+#### Resetting Password API
+Server needs to implement the following API so that client can request in case of forgetting password:
+* Endpoint: `/api/v1/users/forget_password`
+* Method: `POST`
+* Params: `*email`
+
+For successful response with HTTP status of `200`:
+```javascript
+{
+  "status_code": 0,
+  "status": "success"
+}
+```
+
+For failed response with HTTP status of `401`:
+```javascript
+{
+  "status_code": 4004,
+  "error": {
+      "message": "Record not found"
+  }
+}
+```
+
 
 ## Implementation
 The flow of this login is supposed to be used or referenced by any server side framework.

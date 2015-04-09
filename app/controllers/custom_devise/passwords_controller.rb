@@ -23,7 +23,6 @@ class CustomDevise::PasswordsController < Devise::PasswordsController
 
   def after_resetting_password_path_for(resource)
     successful_password_reset_path
-    #super(resource)
   end
 
   # The path used after sending reset password instructions
