@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
-      namespace :users do
-        post :forget_password
+      resources :users, only: [:create] do
+        post :forget_password, on: :collection
       end
     end
   end

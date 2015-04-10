@@ -250,4 +250,20 @@ def after_resetting_password_path_for(resource)
 end
 ```
 
+
+
+
+
+
+
+
+
+
+
+
 =====
+# TODO
+* sign up email api
+* change password api
+* email update api
+* need to check if user is verified at doorkeeper login
