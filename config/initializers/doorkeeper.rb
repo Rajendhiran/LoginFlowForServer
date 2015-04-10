@@ -25,7 +25,7 @@ Doorkeeper.configure do
       user if user.present?
     else
       user = User.find_by_email params[:username]
-      user if user && user.valid_password?(params[:password])
+      user if user && user.valid_password?(params[:password]) && user.confirmed?
     end
   end
 

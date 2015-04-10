@@ -360,4 +360,4 @@ end
 
 =====
 # TODO
-* need to check if user is verified at doorkeeper login
+* customize doorkeeper error message to make it consistent
