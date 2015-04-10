@@ -76,7 +76,7 @@ Our goal here is to support Facebook and Email/Password, and therefore other thi
 ### Register New User Through Email/Password
 User can register through API with the following details:
 
-* Endpoint: `/api/v1/users`
+* Endpoint: `/api/v1/user`
 * Method: `POST`
 * Params: `*email`, `*password`
 
@@ -111,11 +111,67 @@ For failed response (email already exists) with HTTP status of `401`:
 }
 ```
 
+### Update Email/Password
+We allow user to update their email and password accordingly (user already logged in the app and contained `access_token`). However we only use a single endpoint as follow:
+
+* Endpoint: `/api/v1/user`
+* Method: `PUT` or `PATCH`
+* Params: `*access_token`, (`*email` | `*password`, `*old_password`)
+* NOTE: this action is mutual exclusive between `email` and `password`. It only update one attribute at any one time. Param `email` is prioritized; it means that if this param `email` is given, it will ignore *change password* option. Therefore client should have two separated calls: one is for changing `email` and another is for changing `password`. `old_password` is required for changing password case.
+
+For successful response with HTTP status of `200`:
+```javascript
+{
+  "status_code": 0,
+  "status": "success"
+}
+```
+
+For failed response (try to update the same email as existing) with HTTP status of `200`:
+```javascript
+{
+  "status_code": 4022,
+  "error": {
+    "message": "Attributes are invalid",
+    "full_messages": [
+      "Trying to update the same email"
+    ]
+  }
+}
+```
+
+For failed response (try to update email which already exists in other people's account) with HTTP status of `200`:
+```javascript
+{
+  "status_code": 4022,
+  "error": {
+    "message": "Attributes are invalid",
+    "full_messages": [
+        "Email has already been taken"
+    ]
+  }
+}
+```
+
+For failed response (no email or password provided) with HTTP status of `200`:
+```javascript
+{
+  "status_code": 4022,
+  "error": {
+    "message": "Attributes are invalid",
+    "full_messages": [
+      "Nothing is updated"
+    ]
+  }
+}
+```
 
 
 
 
-### Resetting Password
+
+
+### Reset Password
 This happens when user requests for *forget password* feature. The flow of this is that `client` mobile application calls forgetting password api which in turn sends out email to the user to verify authenticity of request. This is as far as the client app does the job, and the rest will be based upon web interface.
 
 ```
@@ -129,7 +185,7 @@ This happens when user requests for *forget password* feature. The flow of this 
 
 #### Resetting Password API
 Server needs to implement the following API so that client can request in case of forgetting password:
-* Endpoint: `/api/v1/users/forget_password`
+* Endpoint: `/api/v1/user/forget_password`
 * Method: `POST`
 * Params: `*email`
 
@@ -304,7 +360,4 @@ end
 
 =====
 # TODO
-* sign up email api
-* change password api
-* email update api
 * need to check if user is verified at doorkeeper login
