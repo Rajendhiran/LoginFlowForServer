@@ -301,6 +301,26 @@ HTTP status: `401`
 }
 ```
 
+Since we don't need to manage applications `/oauth/applications`, we can disable the routes as follow:
+```ruby
+Rails.application.routes.draw do
+  use_doorkeeper scope: 'api/v1/oauth' do
+    skip_controllers :applications, :authorized_applications, :authorizations
+  end
+end
+```
+You can read more detail at [https://github.com/doorkeeper-gem/doorkeeper/wiki/Customizing-routes](https://github.com/doorkeeper-gem/doorkeeper/wiki/Customizing-routes)
+
+You can overwrite default blank response for unauthorized request (invald token) for doorkeeper as below:
+
+```ruby
+class Api::ApiController < ActionController::Base
+  # this method is to overwrite the default behavior of empty body when unauthorized
+  def doorkeeper_unauthorized_render_options
+    { json: { status_code: 4031, error: { message: "Invalid access_token" } } }
+  end
+end
+```
 
 ### Resetting Password for `Devise`
 We can implement resetting password in `devise` by using controller `PasswordsController` and views `passwords`. This is **NOT** to be confused with *editing password once user logged in* in system. Editing password is not Resetting password, and editing password is a web feature; thus it needs to be configured with controller `RegistrationsController`. Before you can edit/customize controller or view, you need to generate both of them as following:
@@ -355,16 +375,7 @@ def after_resetting_password_path_for(resource)
 end
 ```
 
-You can overwrite default blank response for unauthorized request (invald token) for doorkeeper as below:
 
-```ruby
-class Api::ApiController < ActionController::Base
-  # this method is to overwrite the default behavior of empty body when unauthorized
-  def doorkeeper_unauthorized_render_options
-    { json: { status_code: 4031, error: { message: "Invalid access_token" } } }
-  end
-end
-```
 
 
 

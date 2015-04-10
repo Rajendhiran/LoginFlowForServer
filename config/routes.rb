@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
-  use_doorkeeper
+  use_doorkeeper scope: 'api/v1/oauth' do
+    skip_controllers :applications, :authorized_applications, :authorizations
+  end
+
+
   devise_for :users, controllers: {
     passwords: "custom_devise/passwords"
   }
