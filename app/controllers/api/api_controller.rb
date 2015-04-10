@@ -4,7 +4,7 @@ class ExpectedErrorAndDoNothing < StandardError; end
 class Api::ApiController < ActionController::Base
 
   rescue_from RecordNotFoundError do
-    render_errors 4004, "Record not found", 401
+    render_errors 4004, "Record not found", 400
   end
 
   rescue_from ExpectedErrorAndDoNothing do

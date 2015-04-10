@@ -40,14 +40,14 @@ When `client` receives error response from `server` due to invalid or expired `t
 P.S. This is **NOT** OAuth *acting on behalf of* flow, and therefore `client` does not need to provide information such as `client_id` and `client_secret`.
 
 ### Facebook Login
-This login is through facebook's `token` which is different from our `server`'s `access_token`. The assumption here is that `client` is integrated with facebook SDK and therefore it can retrieve facebook's `token` with some preset permissions.
+This login is through facebook's `token` which is different from our `server`'s `access_token`. The assumption here is that `client` is integrated with Facebook SDK and therefore it can retrieve Facebook's `token` with some preset permissions.
 
 
 ```
-0. client integrates facebook SDK
-1. client redirects end user to login and authorize permissions in facebook
-2. client receives facebook's token
-3. client requests login to server with facebook's token
+0. client integrates Facebook SDK
+1. client redirects end user to login and authorize permissions in Facebook
+2. client receives Facebook's token
+3. client requests login to server with Facebook's token
 4. server returns access_token
 ```
 Facebook login's parameters:
@@ -179,8 +179,6 @@ For failed response (no email or password provided) with HTTP status of `400`:
 
 
 
-
-
 ### Reset Password
 This happens when user requests for *forget password* feature. The flow of this is that `client` mobile application calls forgetting password api which in turn sends out email to the user to verify authenticity of request. This is as far as the client app does the job, and the rest will be based upon web interface.
 
@@ -207,7 +205,7 @@ For successful response with HTTP status of `200`:
 }
 ```
 
-For failed response with HTTP status of `401`:
+For failed response with HTTP status of `400`:
 ```javascript
 {
   "status_code": 4004,
@@ -357,6 +355,16 @@ def after_resetting_password_path_for(resource)
 end
 ```
 
+You can overwrite default blank response for unauthorized request (invald token) for doorkeeper as below:
+
+```ruby
+class Api::ApiController < ActionController::Base
+  # this method is to overwrite the default behavior of empty body when unauthorized
+  def doorkeeper_unauthorized_render_options
+    { json: { status_code: 4031, error: { message: "Invalid access_token" } } }
+  end
+end
+```
 
 
 
