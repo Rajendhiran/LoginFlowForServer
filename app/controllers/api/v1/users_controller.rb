@@ -20,7 +20,7 @@ class Api::V1::UsersController < Api::ApiController
       if user.save
         render_success
       else
-        render_errors(4022, "Attributes are invalid", 401, full_messages: user.errors.full_messages)
+        render_errors(4022, "Attributes are invalid", 400, full_messages: user.errors.full_messages)
       end
     end
   end
@@ -34,12 +34,12 @@ class Api::V1::UsersController < Api::ApiController
       # update email
 
       if user.email == email
-        render_errors(4022, "Attributes are invalid", 401, full_messages: ["Trying to update the same email"])
+        render_errors(4022, "Attributes are invalid", 400, full_messages: ["Trying to update the same email"])
       else
         if user.update(email: email)
           render_success
         else
-          render_errors(4022, "Attributes are invalid", 401, full_messages: user.errors.full_messages)
+          render_errors(4022, "Attributes are invalid", 400, full_messages: user.errors.full_messages)
         end
       end
 
@@ -48,13 +48,13 @@ class Api::V1::UsersController < Api::ApiController
         if user.update(password: params[:password])
           render_success
         else
-          render_errors(4022, "Attributes are invalid", 401, full_messages: user.errors.full_messages)
+          render_errors(4022, "Attributes are invalid", 400, full_messages: user.errors.full_messages)
         end
       else
-        render_errors(4022, "Attributes are invalid", 401, full_messages: ["Invalid old password"])
+        render_errors(4022, "Attributes are invalid", 400, full_messages: ["Invalid old password"])
       end
     else
-      render_errors(4022, "Attributes are invalid", 401, full_messages: ["Nothing is updated"])
+      render_errors(4022, "Attributes are invalid", 400, full_messages: ["Nothing is updated"])
     end
   end
 end

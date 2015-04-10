@@ -35,6 +35,10 @@ class Api::ApiController < ActionController::Base
     entity
   end
 
+  # this method is to overwrite the default behavior of empty body when unauthorized
+  def doorkeeper_unauthorized_render_options
+    { json: { status_code: 4031, error: { message: "Invalid access_token" } } }
+  end
 
   private
 

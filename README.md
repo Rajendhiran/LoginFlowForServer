@@ -88,7 +88,7 @@ For successful response with HTTP status of `200`:
 }
 ```
 
-For failed response (can't save because of validation) with HTTP status of `401`:
+For failed response (can't save because of validation) with HTTP status of `400`:
 ```javascript
 {
     "status_code": 4022,
@@ -101,7 +101,7 @@ For failed response (can't save because of validation) with HTTP status of `401`
 }
 ```
 
-For failed response (email already exists) with HTTP status of `401`:
+For failed response (email already exists) with HTTP status of `400`:
 ```javascript
 {
     "status_code": 4010,
@@ -127,7 +127,17 @@ For successful response with HTTP status of `200`:
 }
 ```
 
-For failed response (try to update the same email as existing) with HTTP status of `200`:
+For failed response (invalid `access_token`) with HTTP status of `401`:
+```javascript
+{
+    "status_code": 4031,
+    "error": {
+        "message": "Invalid access_token"
+    }
+}
+```
+
+For failed response (try to update the same email as existing) with HTTP status of `400`:
 ```javascript
 {
   "status_code": 4022,
@@ -140,7 +150,7 @@ For failed response (try to update the same email as existing) with HTTP status 
 }
 ```
 
-For failed response (try to update email which already exists in other people's account) with HTTP status of `200`:
+For failed response (try to update email which already exists in other people's account) with HTTP status of `400`:
 ```javascript
 {
   "status_code": 4022,
@@ -153,7 +163,7 @@ For failed response (try to update email which already exists in other people's 
 }
 ```
 
-For failed response (no email or password provided) with HTTP status of `200`:
+For failed response (no email or password provided) with HTTP status of `400`:
 ```javascript
 {
   "status_code": 4022,
