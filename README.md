@@ -73,6 +73,47 @@ You have the choice to do whatever you want, but it will be very inconsistent wi
 ### Other 3<sup>rd</sup> Party Login
 Our goal here is to support Facebook and Email/Password, and therefore other third party authentications such Twitter or Google is considered as further customization.
 
+### Register New User Through Email/Password
+User can register through API with the following details:
+
+* Endpoint: `/api/v1/users`
+* Method: `POST`
+* Params: `*email`, `*password`
+
+For successful response with HTTP status of `200`:
+```javascript
+{
+  "status_code": 0,
+  "status": "success"
+}
+```
+
+For failed response (can't save because of validation) with HTTP status of `401`:
+```javascript
+{
+    "status_code": 4022,
+    "error": {
+        "message": "Attributes are invalid",
+        "full_messages": [
+            "Name can't be blank"
+        ]
+    }
+}
+```
+
+For failed response (email already exists) with HTTP status of `401`:
+```javascript
+{
+    "status_code": 4010,
+    "error": {
+        "message": "Email already exists"
+    }
+}
+```
+
+
+
+
 
 ### Resetting Password
 This happens when user requests for *forget password* feature. The flow of this is that `client` mobile application calls forgetting password api which in turn sends out email to the user to verify authenticity of request. This is as far as the client app does the job, and the rest will be based upon web interface.
