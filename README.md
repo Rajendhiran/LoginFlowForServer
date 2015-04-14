@@ -296,8 +296,10 @@ HTTP status: `200`
 HTTP status: `401`
 ```json
 {
-  "error": "invalid_grant",
-  "error_description": "The provided authorization grant is invalid, expired, revoked, does not match the redirection URI used in the authorization request, or was issued to another client."
+  "status_code": 4001,
+  "error": {
+    "message": "facebook_invalid_token: Invalid Facebook token"
+  }
 }
 ```
 

@@ -1,3 +1,5 @@
+require "#{Rails.root}/lib/doorkeeper/helpers/doorkeeper_helper"
+
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use.
   # Currently supported options are :active_record, :mongoid2, :mongoid3,
@@ -22,7 +24,8 @@ Doorkeeper.configure do
   resource_owner_from_credentials do |routes|
     if params[:facebook_token]
       user = Facebook.authenticate(params[:facebook_token])
-      user if user.present?
+      raise Doorkeeper::Errors::Facebook::InvalidToken unless user.present?
+      # user if user.present?
     else
       user = User.find_by_email params[:username]
       user if user && user.valid_password?(params[:password]) && user.confirmed?
