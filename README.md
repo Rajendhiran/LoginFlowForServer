@@ -1,6 +1,9 @@
 # The Login Flow
 The goal of this document is to provide a consistent way for login process across the server platforms (Rails, NodeJS, php, ...).
 
+## Prototype
+The prototype of this login workflow can be found at [https://login-flow.heorkuapp.com](https://login-flow.heorkuapp.com)
+
 ## Login Types
 The current suggested login process types now are
 * Login through `email` and `password`

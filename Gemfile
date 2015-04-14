@@ -46,6 +46,10 @@ group :development, :test do
 end
 
 
+
 gem 'doorkeeper'
 gem 'devise'
 gem 'koala'
+
+
+gem 'rails_12factor', group: :production
