@@ -91,7 +91,7 @@ For successful response with HTTP status of `200`:
 For failed response (can't save because of validation) with HTTP status of `400`:
 ```javascript
 {
-    "status_code": 4022,
+    "status_code": 42200,
     "error": {
         "message": "Attributes are invalid",
         "full_messages": [
@@ -104,7 +104,7 @@ For failed response (can't save because of validation) with HTTP status of `400`
 For failed response (email already exists) with HTTP status of `400`:
 ```javascript
 {
-    "status_code": 4010,
+    "status_code": 40002,
     "error": {
         "message": "Email already exists"
     }
@@ -130,7 +130,7 @@ For successful response with HTTP status of `200`:
 For failed response (invalid `access_token`) with HTTP status of `401`:
 ```javascript
 {
-    "status_code": 4031,
+    "status_code": 49800,
     "error": {
         "message": "Invalid access_token"
     }
@@ -140,7 +140,7 @@ For failed response (invalid `access_token`) with HTTP status of `401`:
 For failed response (try to update the same email as existing) with HTTP status of `400`:
 ```javascript
 {
-  "status_code": 4022,
+  "status_code": 42200,
   "error": {
     "message": "Attributes are invalid",
     "full_messages": [
@@ -153,7 +153,7 @@ For failed response (try to update the same email as existing) with HTTP status 
 For failed response (try to update email which already exists in other people's account) with HTTP status of `400`:
 ```javascript
 {
-  "status_code": 4022,
+  "status_code": 42200,
   "error": {
     "message": "Attributes are invalid",
     "full_messages": [
@@ -166,7 +166,7 @@ For failed response (try to update email which already exists in other people's 
 For failed response (no email or password provided) with HTTP status of `400`:
 ```javascript
 {
-  "status_code": 4022,
+  "status_code": 42200,
   "error": {
     "message": "Attributes are invalid",
     "full_messages": [
@@ -208,7 +208,7 @@ For successful response with HTTP status of `200`:
 For failed response with HTTP status of `400`:
 ```javascript
 {
-  "status_code": 4004,
+  "status_code": 40400,
   "error": {
       "message": "Record not found"
   }
@@ -219,7 +219,21 @@ For failed response with HTTP status of `400`:
 A common practice in api is that we have notion of **HTTP status code** and **Application status code**. The *HTTP status code* refers to the standard reference universally used in HTTP protocol to notify the client about server's response status. i.e. To tell if request is successful, there is something wrong with request inputs or server went into the wrong state. *Application status code* refers to specific application state once server responds to the client. e.g. Server can reply with HTTP status code of `400` (`Bad Request`) to hint the client that there might be something wrong with input of the request, but it does not specifically mention what the wrong input is. Application status code comes into play for this by specifically stating the application status code as (**say** `4001`) which means **email is invalid** defined in certain application. **HTTP status code** is understood by standard libraries used to manipulate the blocks of code. However, **Application status code** is defined on application basis and its definition really depends on organization itself. Since it is repetitive across applications that we develop and to minimize confusion for client usage, we propose the following Application Status Code:
 
 ```ruby
+SUCCESS = 0 # http `ok` is 200, but common practice for other industries is 0.
+
+BAD_REQUEST = 40000 # general bad request and this is generally invalid input parameters from client
+BAD_REQUEST_EMPTY_PARAMS = 40001 # required parameters are empty
+BAD_REQUEST_DUPLICATE_RECORD = 40002 # duplicate record
+
+UNAUTHORIZED = 40100 # general unauthorized request
+
 RECORD_NOT_FOUND = 40400 # general record not found
+
+UNPROCESSABLE_ENTITY = 42200 # server cannot save the entity due to validation
+
+INVALID_TOKEN = 49800 # general invalid token
+INVALID_TOKEN_EXPIRED = 49801 # invalid expired token
+INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. facebook's token
 ```
 
 The rational is that we peg prefix HTTP status code with 2 digits of specific error type depending on the nature of HTTP status code. e.g. `RECORD_NOT_FOUND = 40400` corresponds to HTTP status code of `404` meaning `Not Found`. The last two digits can be used to identify the specific nature of the error type in which this case `00` is general case of record not found in database.
@@ -306,7 +320,7 @@ HTTP status: `200`
 HTTP status: `401`
 ```json
 {
-  "status_code": 4001,
+  "status_code": 49802,
   "error": {
     "message": "facebook_invalid_token: Invalid Facebook token"
   }
@@ -401,4 +415,4 @@ end
 
 =====
 # TODO
-* customize doorkeeper error message to make it consistent
+* reading the agreeable specs and update

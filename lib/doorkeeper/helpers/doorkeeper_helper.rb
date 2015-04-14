@@ -14,7 +14,7 @@ module Doorkeeper
       if error_name
         # OAuth::ErrorResponse.new name: error_name, state: params[:state]
         CustomError.new name: error_name, state: params[:state], meta_data: {
-          status_code: 4001,
+          status_code: Utilities::ApplicationCode::INVALID_TOKEN_THIRD_PARTY,
           error: {
             message: "#{error_name}: #{message}"
           }

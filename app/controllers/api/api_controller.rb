@@ -4,7 +4,7 @@ class ExpectedErrorAndDoNothing < StandardError; end
 class Api::ApiController < ActionController::Base
 
   rescue_from RecordNotFoundError do
-    render_errors 4004, "Record not found", 400
+    render_errors Utilities::ApplicationCode::INVALID_TOKEN_THIRD_PARTY, "Record not found", 400
   end
 
   rescue_from ExpectedErrorAndDoNothing do
@@ -12,7 +12,7 @@ class Api::ApiController < ActionController::Base
 
   def raise_auth_missing_errors_if_empty_params *param_list
     missing_list = param_list.select{ |p| !params[p.to_sym].present? }
-    render_errors(4001, "Auth Parameters are missing", 401, {missing_parameters: missing_list}) and  raise ExpectedErrorAndDoNothing if missing_list.size > 0
+    render_errors(Utilities::ApplicationCode::BAD_REQUEST_EMPTY_PARAMS, "Auth Parameters are missing", 400, { missing_parameters: missing_list }) and  raise ExpectedErrorAndDoNothing if missing_list.size > 0
   end
 
   def render_errors status_code, error_message, http_code = 400, error_data = {}, extra_data = {}
@@ -26,7 +26,7 @@ class Api::ApiController < ActionController::Base
   end
 
   def render_success message = "success", extra_data = {}
-    render json: {status_code: 0, status: message}.merge(extra_data)
+    render json: {status_code: Utilities::ApplicationCode::SUCCESS, status: message}.merge(extra_data)
   end
 
   def get_api_entity entity, klass = nil
@@ -37,7 +37,7 @@ class Api::ApiController < ActionController::Base
 
   # this method is to overwrite the default behavior of empty body when unauthorized
   def doorkeeper_unauthorized_render_options
-    { json: { status_code: 4031, error: { message: "Invalid access_token" } } }
+    { json: { status_code: Utilities::ApplicationCode::INVALID_TOKEN, error: { message: "Invalid access_token" } } }
   end
 
   private
