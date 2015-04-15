@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
       resource :user, only: [:create, :update] do
-        post :forget_password, on: :collection
+        post :forget_password
+        put :sync_facebook
       end
     end
   end

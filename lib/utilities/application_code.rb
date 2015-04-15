@@ -5,6 +5,7 @@ module Utilities
     BAD_REQUEST = 40000 # general bad request and this is generally invalid input parameters from client
     BAD_REQUEST_EMPTY_PARAMS = 40001 # required parameters are empty
     BAD_REQUEST_DUPLICATE_RECORD = 40002 # duplicate record
+    BAD_REQUEST_DUPLICATE_RECORD_FB = 40003 # duplicate record for facebook
 
     UNAUTHORIZED = 40100 # general unauthorized request
 
