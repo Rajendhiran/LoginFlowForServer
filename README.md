@@ -218,6 +218,10 @@ For failed response with HTTP status of `400`:
 }
 ```
 
+#### Resending Verification Email
+This api is the same as resetting password api. You just need to issue the same call as this is transparent from user of view.
+
+
 ## Error Code Standardization
 A common practice in api is that we have notion of **HTTP status code** and **Application status code**. The *HTTP status code* refers to the standard reference universally used in HTTP protocol to notify the client about server's response status. i.e. To tell if request is successful, there is something wrong with request inputs or server went into the wrong state. *Application status code* refers to specific application state once server responds to the client. e.g. Server can reply with HTTP status code of `400` (`Bad Request`) to hint the client that there might be something wrong with input of the request, but it does not specifically mention what the wrong input is. Application status code comes into play for this by specifically stating the application status code as (**say** `4001`) which means **email is invalid** defined in certain application. **HTTP status code** is understood by standard libraries used to manipulate the blocks of code. However, **Application status code** is defined on application basis and its definition really depends on organization itself. Since it is repetitive across applications that we develop and to minimize confusion for client usage, we propose the following Application Status Code:
 
@@ -419,3 +423,4 @@ end
 =====
 # TODO
 * reading the agreeable specs and update
+* facebook sync after login with email/password
