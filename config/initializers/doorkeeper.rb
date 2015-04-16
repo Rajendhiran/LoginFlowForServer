@@ -23,12 +23,16 @@ Doorkeeper.configure do
 
   resource_owner_from_credentials do |routes|
     if params[:facebook_token]
+      # we use Facebook helper here which can be found in app/services/facebook.rb
       user = Facebook.authenticate(params[:facebook_token])
-      raise Doorkeeper::Errors::Facebook::InvalidToken unless user.present?
-      # user if user.present?
+      fail Doorkeeper::Errors::Facebook::InvalidToken unless user.present?
     else
       user = User.find_by_email params[:username]
-      user if user && user.valid_password?(params[:password]) && user.confirmed?
+      fail Doorkeeper::Errors::UsernamePassword::UserDoesNotExist unless user.present?
+      fail Doorkeeper::Errors::UsernamePassword::InvalidPassword unless user.valid_password?(params[:password])
+      fail Doorkeeper::Errors::UsernamePassword::UserNotVerified unless user.confirmed?
+
+      user
     end
   end
 

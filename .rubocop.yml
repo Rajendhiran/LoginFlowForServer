@@ -1,0 +1,15 @@
+Documentation:
+  Enabled: false
+
+LineLength:
+  Max: 120
+
+
+MethodLength:
+  Max: 20
+
+StringLiterals:
+  Enabled: false
+
+ClassAndModuleChildren:
+  Enabled: false

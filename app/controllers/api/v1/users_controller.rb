@@ -38,14 +38,11 @@ class Api::V1::UsersController < Api::ApiController
     end
   end
 
-
   def update
     user = current_resource_owner
     email = params[:email].to_s.downcase.strip
 
     if email.present?
-      # update email
-
       if user.email == email
         render_errors(Utilities::ApplicationCode::UNPROCESSABLE_ENTITY, "Attributes are invalid", 400, full_messages: ["Trying to update the same email"])
       else
@@ -55,7 +52,6 @@ class Api::V1::UsersController < Api::ApiController
           render_errors(Utilities::ApplicationCode::UNPROCESSABLE_ENTITY, "Attributes are invalid", 400, full_messages: user.errors.full_messages)
         end
       end
-
     elsif params[:password]
       if user.valid_password?(params[:old_password])
         if user.update(password: params[:password])

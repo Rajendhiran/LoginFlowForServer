@@ -8,17 +8,20 @@ module Utilities
     BAD_REQUEST_DUPLICATE_RECORD_FB = 40003 # duplicate record for facebook
 
     UNAUTHORIZED = 40100 # general unauthorized request
+    UNAUTHORIZED_UNVERIFIED = 40101 # record/user is not verified/confirmed
 
     RECORD_NOT_FOUND = 40400 # general record not found
+    RECORD_NOT_FOUND_BY_EMAIL = 40401 # record/user not found by email
+    RECORD_NOT_FOUND_BY_ID = 40402 # record not found by ID
 
     UNPROCESSABLE_ENTITY = 42200 # server cannot save the entity due to validation
 
     INVALID_TOKEN = 49800 # general invalid token
     INVALID_TOKEN_EXPIRED = 49801 # invalid expired token
     INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. facebook's token
+    INVALID_PASSWORD = 49802 # invalid password, not validation
   end
 end
-
 
 # 400 Bad Request
 # The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).[14]

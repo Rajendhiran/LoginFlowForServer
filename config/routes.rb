@@ -1,15 +1,13 @@
 Rails.application.routes.draw do
-
   use_doorkeeper scope: 'api/v1/oauth' do
     skip_controllers :applications, :authorized_applications, :authorizations
   end
-
 
   devise_for :users, controllers: {
     passwords: "custom_devise/passwords"
   }
 
-  namespace :api, defaults: {format: :json} do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resource :user, only: [:create, :update] do
         post :forget_password

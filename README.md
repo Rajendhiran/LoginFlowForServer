@@ -271,16 +271,21 @@ SUCCESS = 0 # http `ok` is 200, but common practice for other industries is 0.
 BAD_REQUEST = 40000 # general bad request and this is generally invalid input parameters from client
 BAD_REQUEST_EMPTY_PARAMS = 40001 # required parameters are empty
 BAD_REQUEST_DUPLICATE_RECORD = 40002 # duplicate record
+BAD_REQUEST_DUPLICATE_RECORD_FB = 40003 # duplicate record for facebook
 
 UNAUTHORIZED = 40100 # general unauthorized request
+UNAUTHORIZED_UNVERIFIED = 40101 # record/user is not verified/confirmed
 
 RECORD_NOT_FOUND = 40400 # general record not found
+RECORD_NOT_FOUND_BY_EMAIL = 40401 # record/user not found by email
+RECORD_NOT_FOUND_BY_ID = 40402 # record not found by ID
 
 UNPROCESSABLE_ENTITY = 42200 # server cannot save the entity due to validation
 
 INVALID_TOKEN = 49800 # general invalid token
 INVALID_TOKEN_EXPIRED = 49801 # invalid expired token
 INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. facebook's token
+INVALID_PASSWORD = 49802 # invalid password, not validation
 ```
 
 The rational is that we peg prefix HTTP status code with 2 digits of specific error type depending on the nature of HTTP status code. e.g. `RECORD_NOT_FOUND = 40400` corresponds to HTTP status code of `404` meaning `Not Found`. The last two digits can be used to identify the specific nature of the error type in which this case `00` is general case of record not found in database.
@@ -331,10 +336,14 @@ Doorkeeper.configure do
     if params[:facebook_token]
       # we use Facebook helper here which can be found in app/services/facebook.rb
       user = Facebook.authenticate(params[:facebook_token])
-      user if user.present?
+      fail Doorkeeper::Errors::Facebook::InvalidToken unless user.present?
     else
       user = User.find_by_email params[:username]
-      user if user && user.valid_password?(params[:password])
+      fail Doorkeeper::Errors::UsernamePassword::UserDoesNotExist unless user.present?
+      fail Doorkeeper::Errors::UsernamePassword::InvalidPassword unless user.valid_password?(params[:password])
+      fail Doorkeeper::Errors::UsernamePassword::UserNotVerified unless user.confirmed?
+
+      user
     end
   end
 end
@@ -343,7 +352,7 @@ end
 At client side (mobile application), we can use the following request:
 
 ```
-POST: https://<hostname>/oauth/token
+POST: https://<hostname>/api/v1/oauth/token
 form-data:
   grant-type: password
   username: <username>
@@ -370,6 +379,36 @@ HTTP status: `401`
   "status_code": 49802,
   "error": {
     "message": "facebook_invalid_token: Invalid Facebook token"
+  }
+}
+```
+
+HTTP status: `401`
+```json
+{
+  "status_code": 40401,
+  "error": {
+    "message": "username_password_user_does_not_exist: User does not exist"
+  }
+}
+```
+
+HTTP status: `401`
+```json
+{
+  "status_code": 49802,
+  "error": {
+    "message": "username_password_invalid_password: Invalid password"
+  }
+}
+```
+
+HTTP status: `401`
+```json
+{
+  "status_code": 40101,
+  "error": {
+    "message": "username_password_user_not_verified: User is not verified"
   }
 }
 ```
@@ -463,4 +502,4 @@ end
 =====
 # TODO
 * reading the agreeable specs and update
-* facebook sync after login with email/password
+* split error case into detail code for login (verified)
