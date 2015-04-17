@@ -9,8 +9,8 @@ This sample project is written in *Ruby on Rails* as a generic approach to bridg
 ## Login Types
 The current suggested **Login Process** types now are:
 
-* Login through `email` and `password`: user needs to sign in with his/her email and password. It means user needs to register and verify their email before they can successfully login.
-* Login through `facebook`: user can login through Facebook in which the `server` redirects user to Facebook Login page with permission request. Once permissions are granted, user will be redirected back to web as *logged in* user of the application.
+* Login through **email** and **password**: user needs to sign in with his/her email and password. It means user needs to register and verify their email before they can successfully login.
+* Login through **Facebook**: user can login through Facebook in which the `server` redirects user to Facebook Login page with permission request. Once permissions are granted, user will be redirected back to web as *logged in* user of the application.
 
 These two login types are the basic building block to be used across the applications for consistency and convenience. It helps our sale teams to consistently provide options for clients and helps our engineering teams to quickly set up authentication system in a single standard workflow for 2359 Media.
 
@@ -23,17 +23,22 @@ From server point of view, we will implement one way of login flow only. We comb
 * access token `bearer`: is the term used in **OAuth** protocol to refer to the API consumer. We will just assume that `bearer` and `client` are the same entity in this context.
 
 ## How `client` retrieves data from `server`
+When `client` wants to retrieve/requestion information from `server`, it follows the following flow:
 
 ```
 1. client ----(request data)----> server
-2. server checks if access_token is provided or access_token is valid
-3. server checks
+2. server receives request from clients
+3. server checks if `access_token` is provided or valid
   if access_token is valid
     return intended data
   else
-    return error json
+    return error result indicating the possible problems
   end
 ```
+
+Not every request requires `access_token` or some sort of authentication. This is because there are some requests that cannot be required to provide authentication such as *Registering New User*. Therefore, one should pay attention to the **required** *parameters* prefixed with asterisk `*`.
+
+Our scenario so far is limited to *stateless* HTTP protocol in which `client` initiate the action to the `server`. This flow is different from **bidirectional** flow in which `server` can push data to the `client` when necessary. Since our login process does not require *reactive* state from server, we will not include this feature in our workflow here.
 
 ## How `client` retrieves `access_token` from `server`
 
