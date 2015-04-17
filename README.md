@@ -97,24 +97,74 @@ For debugging purpose, you can always access your personal Facebook Developer pa
 
 
 ### Email/Password Login
-This login is through `email/password`.
+This login is through `email/password`. This is very similar to the above Facebook's login method, but instead of `client` does the heavy job of redirecting user to Facebook page to grant permission, `client` just needs to represent `email` and `password` input fields for user to key in and relay this information to the server for validation.
 
 ```
-1. client requests login to server with email/password
-2. server returns access_token
+1. client requests login to server with `email/password`
+2. server returns `access_token`
 ```
 
-Email login's parameters:
-* `username`: this is an email. The reason we use the parameter name as `username` instead of `email` is that standard OAuth specs and other implementation use `username`, and therefore this is for consistency purpose.
-* `password`
+* Endpoint: `/api/v1/oauth/token`
+* Method: `POST`
+* Params: `*grant_type` = `password`, `*username`, `*password`
+* Note:
+  * you must supply the parameter `grant_type` with value of `password` to consistently match with OAuth  credential login type.
+  * `username`: this is an email. The reason we use the parameter name as `username` instead of `email` is that standard OAuth specs and other implementation use `username`, and therefore this is for consistency purpose.
 
-### Consistent Fields in `users` Table
+Response with (success) HTTP status: `200`
+```json
+{
+  "access_token": "fc9f440034c112bfc3ca8d43d0c7fdae0eb1c1ea5d3f7c0afdd2f9451c8906cc",
+  "token_type": "bearer",
+  "expires_in": 2592000,
+  "created_at": 1428481781
+}
+```
+This should not a stranger to you from Facebook login explained above. However, there are a few edge cases for *failed* cases in email/password flow:
+
+Response with (failed [email is not found in server's database]) HTTP status: `401`
+```json
+{
+  "status_code": 40401,
+  "error": {
+    "message": "username_password_user_does_not_exist: User does not exist"
+  }
+}
+```
+
+Response with (failed [password supplied is not valid]) HTTP status: `401`
+```json
+{
+  "status_code": 49802,
+  "error": {
+    "message": "username_password_invalid_password: Invalid password"
+  }
+}
+```
+
+Response with (failed [password is valid but email is not verified]) HTTP status: `401`
+```json
+{
+  "status_code": 40101,
+  "error": {
+    "message": "username_password_user_not_verified: User is not verified"
+  }
+}
+```
+
+
+One should note that the endpoints to request for `access_token` by *Facebook* and *email/password* are the same, namely `/api/v1/oauth/token`. However, Facebook login flow will take precedented if parameter `facebook_token` is given. As `client`, you should handle this as two separated cases for different login types.
+
+
+### Other 3<sup>rd</sup> Party Login
+Our goal here is to support Facebook and Email/Password, and therefore other third party authentications such Twitter or Google is considered as further customization.
+
+
+## Consistent Fields in `users` Table
 You have the choice to do whatever you want, but it will be very inconsistent with code used in this document, and therefore we suggest that you stick to the following names:
 * The table of `user` model is `models` (model as `User`). You can define something else like `member`, but it's not recommended here.
 * The required fields in this `users` table are `email` and `fid` (facebook id as string). You can define social network table as an association for extensibility purpose in order to use other third party authentications, but we will focus on facebook integration which is hard wired in this table.
 
-### Other 3<sup>rd</sup> Party Login
-Our goal here is to support Facebook and Email/Password, and therefore other third party authentications such Twitter or Google is considered as further customization.
 
 ### Register New User Through Email/Password
 User can register through API with the following details:
@@ -401,39 +451,10 @@ form-data:
 
 Client side does not need to supply `client_id` and `client_secret`, and the app in `/oauth/applications` is not needed to be created.
 
-Below is the default response after successfully & unsuccessfully requesting token:
 
 
 
-HTTP status: `401`
-```json
-{
-  "status_code": 40401,
-  "error": {
-    "message": "username_password_user_does_not_exist: User does not exist"
-  }
-}
-```
 
-HTTP status: `401`
-```json
-{
-  "status_code": 49802,
-  "error": {
-    "message": "username_password_invalid_password: Invalid password"
-  }
-}
-```
-
-HTTP status: `401`
-```json
-{
-  "status_code": 40101,
-  "error": {
-    "message": "username_password_user_not_verified: User is not verified"
-  }
-}
-```
 
 Since we don't need to manage applications `/oauth/applications`, we can disable the routes as follow:
 ```ruby
