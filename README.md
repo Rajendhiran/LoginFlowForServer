@@ -17,10 +17,10 @@ These two login types are the basic building block to be used across the applica
 From server point of view, we will implement one way of login flow only. We combine both login types for every project. On the other hand, client/mobile can choose the number of ways to support based on the project.
 
 ## Terminologies
-* `client`: mobile client (android/ios) connecting to server for retrieve data
-* `server`: api provider (Rails/NodeJS/php)
-* `access_token`: a scramble piece of string to authenticate and authorize data consumer. This `access_token` is provided by `server` and to be used by `client`. `client` needs to attach this `access_token` information for every request to `server`. This token can be embedded in HTTP header, query string, or body of the request.
-* access token `bearer`: is the term used in OAuth to refer to the api consumer. We will just assume that `bearer` and `client` are the same entity.
+* `client`: mobile client (android/ios) connecting to server for retrieve data. This is the API consumer.
+* `server`: API provider (Rails/NodeJS/php) that provides services for clients. Generally it is a central repository storing data and necessary information about clients. Moreover, all business logics are implemented here. One should note that client can communicate with server transparently: meaning that client does not need to know how server is implemented (either in Ruby, Java, and the likes) as long as server offers the contract API interface.
+* `access_token`: a scramble piece of string to authenticate and authorize data consumer. Simply put, `access_token` can be considered as *physical key* to unlock the door (server gate) before you can enter the building (server). This `access_token` is provided by `server` and to be used by `client`. `client` needs to attach this `access_token` information for every request to `server`. This token can be embedded in HTTP header, query string, or body of the request.
+* access token `bearer`: is the term used in **OAuth** protocol to refer to the API consumer. We will just assume that `bearer` and `client` are the same entity in this context.
 
 ## How `client` retrieves data from `server`
 
