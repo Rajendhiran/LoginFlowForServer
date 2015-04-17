@@ -2,15 +2,19 @@
 The goal of this document is to provide an overview of a consistent way for **Login Process** between `server` and `client`. It focuses on the flows, common practices and conventions of industry of authentication mechanisms rather than specific technology stack frameworks such as [Ruby on Rails](http://rubyonrails.org/), [Sails.js](http://sailsjs.org/), [Laravel](http://laravel.com/) and whatnots.
 
 ## Prototype
-The prototype of this login workflow can be found at [https://login-flow.heorkuapp.com](https://login-flow.heorkuapp.com). This prototype is meant for *mobile developers* (aka. `client` application) to implement the client side of the login process in their respective platform. *Server developers* can also leverage of the existing flow code as a guide to implement the server side as well. This sample project is written in *Ruby on Rails* as a generic approach to bridge between server and client and therefore server developers should feel free **NOT** to *strictly* follow everything here. However, one should note that other than specific implementations, we should stick to common API contract interface elaborated below.
+The prototype of this login workflow can be found at [https://login-flow.heorkuapp.com](https://login-flow.heorkuapp.com). This prototype is meant for *mobile developers* (aka. `client` application) to implement the client side of the login process in their respective platform. *Server developers* can also leverage of the existing flow code as a guide to implement the server side as well.
+
+This sample project is written in *Ruby on Rails* as a generic approach to bridge between server and client and therefore server developers should feel free **NOT** to *strictly* follow everything here. However, one should note that other than specific implementations, we should stick to common API contract interface elaborated below.
 
 ## Login Types
-The current suggested login process types now are
-* Login through `email` and `password`
-* Login through `facebook`
+The current suggested **Login Process** types now are:
 
-## Single Way of Login Flow
-From server point of view, we will implement one way of login only. We combine both login types for every project. On the other hand, client/mobile can choose the number of ways to support based on the project.
+* Login through `email` and `password`: user needs to sign in with his/her email and password. It means user needs to register and verify their email before they can successfully login.
+* Login through `facebook`: user can login through Facebook in which the `server` redirects user to Facebook Login page with permission request. Once permissions are granted, user will be redirected back to web as *logged in* user of the application.
+
+These two login types are the basic building block to be used across the applications for consistency and convenience. It helps our sale teams to consistently provide options for clients and helps our engineering teams to quickly set up authentication system in a single standard workflow for 2359 Media.
+
+From server point of view, we will implement one way of login flow only. We combine both login types for every project. On the other hand, client/mobile can choose the number of ways to support based on the project.
 
 ## Terminologies
 * `client`: mobile client (android/ios) connecting to server for retrieve data
