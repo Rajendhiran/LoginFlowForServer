@@ -36,20 +36,22 @@ When `client` wants to retrieve/requestion information from `server`, it follows
   end
 ```
 
-Not every request requires `access_token` or some sort of authentication. This is because there are some requests that cannot be required to provide authentication such as *Registering New User*. Therefore, one should pay attention to the **required** *parameters* prefixed with asterisk `*`.
+Not every request requires `access_token` or some sort of authentication. This is because there are some requests that cannot be required to provide authentication such as *Registering New User*. Therefore, one should pay attention to the **required** *parameters* prefixed with asterisk `*`. The `access_token` is a *time-sensitive* token in which it will expire at some point in the future. Hence, `client` **MUST** take into consideration for this case.
 
 Our scenario so far is limited to *stateless* HTTP protocol in which `client` initiate the action to the `server`. This flow is different from **bidirectional** flow in which `server` can push data to the `client` when necessary. Since our login process does not require *reactive* state from server, we will not include this feature in our workflow here.
 
-## How `client` retrieves `access_token` from `server`
 
-When `client` receives error response from `server` due to invalid or expired `token`, it needs to request for new `access_token` through login form (by either facebook or email/password methods). We **DO NOT** support **TOKEN RENEWAL** through api.
+## How `client` requests `access_token` from `server`
+`client` is the API consumer from the API provider `server`, and `server` has role to provide `access_token` on demand. When `client` does not have `access_token` or receives error response from `server` due to invalid or expired `access_token`, it needs to request for new `access_token` through API call (either by *Facebook* or *email/password* methods). We **DO NOT** support **TOKEN RENEWAL** through API because we want to simplify the flow and amount of API endpoints.
 
 ```
-1. client ----(login through facebook or email/password)----> server
-2. server validates and returns access_token
+1. client ----(login through API call by `Facebook` or `email/password`)----> server
+2. server validates and returns `access_token`
 ```
 
-P.S. This is **NOT** OAuth *acting on behalf of* flow, and therefore `client` does not need to provide information such as `client_id` and `client_secret`.
+P.S: This is **NOT** OAuth *acting on behalf of* flow, meaning that the `server` you are developing is not a 3<sup>nd</sup> party application requesting user's resource on another resource server/endpoint;  your `server` application is the *resource server* itself. Therefore `client` does not need to provide information such as `client_id` and `client_secret`. For more information about this flow, you can check it [here]
+(https://tools.ietf.org/html/rfc6749#section-1.3.3)
+
 
 ### Facebook Login
 This login is through facebook's `token` which is different from our `server`'s `access_token`. The assumption here is that `client` is integrated with Facebook SDK and therefore it can retrieve Facebook's `token` with some preset permissions.
