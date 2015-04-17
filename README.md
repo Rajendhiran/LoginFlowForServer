@@ -54,18 +54,47 @@ P.S: This is **NOT** OAuth *acting on behalf of* flow, meaning that the `server`
 
 
 ### Facebook Login
-This login is through facebook's `token` which is different from our `server`'s `access_token`. The assumption here is that `client` is integrated with Facebook SDK and therefore it can retrieve Facebook's `token` with some preset permissions.
-
+This login is through Facebook's `token` which is different from our `server`'s `access_token`. The assumption here is that `client` is integrated with Facebook SDK and therefore it can retrieve Facebook's `token` with some preset permissions.
 
 ```
-0. client integrates Facebook SDK
-1. client redirects end user to login and authorize permissions in Facebook
-2. client receives Facebook's token
-3. client requests login to server with Facebook's token
-4. server returns access_token
+0. client (mobile app) integrates Facebook SDK
+---------------------------------
+1. end user tries to access server's resource but yet logged in
+2. client redirects end user to login and authorize permissions in Facebook
+3. client receives Facebook's token
+4. client requests login to server with Facebook's token
+5. server returns access_token
 ```
-Facebook login's parameters:
-* `facebook_token`
+
+* Endpoint: `/api/v1/oauth/token`
+* Method: `POST`
+* Params: `*grant_type` = `password`, `*facebook_token`
+* Note: you must supply the parameter `grant_type` with value of `password` to consistently match with OAuth  credential login type.
+
+Response with (success) HTTP status: `200`
+```json
+{
+  "access_token": "fc9f440034c112bfc3ca8d43d0c7fdae0eb1c1ea5d3f7c0afdd2f9451c8906cc",
+  "token_type": "bearer",
+  "expires_in": 2592000,
+  "created_at": 1428481781
+}
+```
+
+Response with (failed) HTTP status: `401`
+```json
+{
+  "status_code": 49802,
+  "error": {
+    "message": "facebook_invalid_token: Invalid Facebook token"
+  }
+}
+```
+
+If we pay attention to expiry in successful response, we see that it varies from application to application. Thus for the sake of simplicity and consistency, we would like to suggest token expiry period to be **30 Days** from the moment `server` replies this successful response.
+
+For debugging purpose, you can always access your personal Facebook Developer page to retrieve temporary Facebook token through [Graph API Explorer](https://developers.facebook.com/tools/explorer).
+
 
 ### Email/Password Login
 This login is through `email/password`.
@@ -374,25 +403,7 @@ Client side does not need to supply `client_id` and `client_secret`, and the app
 
 Below is the default response after successfully & unsuccessfully requesting token:
 
-HTTP status: `200`
-```json
-{
-  "access_token": "fc9f440034c112bfc3ca8d43d0c7fdae0eb1c1ea5d3f7c0afdd2f9451c8906cc",
-  "token_type": "bearer",
-  "expires_in": 2592000,
-  "created_at": 1428481781
-}
-```
 
-HTTP status: `401`
-```json
-{
-  "status_code": 49802,
-  "error": {
-    "message": "facebook_invalid_token: Invalid Facebook token"
-  }
-}
-```
 
 HTTP status: `401`
 ```json
