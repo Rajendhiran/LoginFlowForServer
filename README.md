@@ -157,13 +157,20 @@ One should note that the endpoints to request for `access_token` by *Facebook* a
 
 
 ### Other 3<sup>rd</sup> Party Login
-Our goal here is to support Facebook and Email/Password, and therefore other third party authentications such Twitter or Google is considered as further customization.
+Our goal here is to support *Facebook* and *Email/Password*, and therefore other third party authentications such Twitter or Google is considered as further customization. Additional support of login type should follow the suit of Facebook.
 
+
+## Database Schema
+In this login workflow, we do not dictate the database vendor or type (relational, document, key/value, graph) to be used, and it is really your choice for appropriate scenario in different applications. However, there should be a consistent database schema vectors that allow uniform implementation across applications.
+
+In general applications that require authentication, we need to define some model or database table **user**. Conventionally, we define table as `users` (plural) and model as `User` (singular). This table/model holds information about end users who consume the application, and most of times, it is considered to be a `God` model/class because your application is commonly centered around the user. Therefore, there are high couplings between `User` model and other models.
+
+You do not have to name your user model as `User`, and you probably call it as `Member`. Nonetheless, almost all applications refer this model as `User`; thus we should just follow the crowd.
 
 ## Consistent Fields in `users` Table
 You have the choice to do whatever you want, but it will be very inconsistent with code used in this document, and therefore we suggest that you stick to the following names:
-* The table of `user` model is `models` (model as `User`). You can define something else like `member`, but it's not recommended here.
-* The required fields in this `users` table are `email` and `fid` (facebook id as string). You can define social network table as an association for extensibility purpose in order to use other third party authentications, but we will focus on facebook integration which is hard wired in this table.
+* The table of **user** model is `users` (modeled as `User`). You can define something else like `member`, but it's not recommended here.
+* The required fields in this `users` table are `email` and `fid` (Facebook id as string). You can define *social network* table as an association for extensibility purpose in order to use other third party authentications, but we will focus on Facebook integration which is hard-wired in this table.
 
 
 ### Register New User Through Email/Password
