@@ -211,13 +211,16 @@ For failed response (email already exists) with HTTP status of `400`:
 }
 ```
 
+Note: if user logins with Facebook (her email is already registered from Facebook), then it falls under category *Email already exists*.
+
+
 ### Update Email/Password
-We allow user to update their email and password accordingly (user already logged in the app and contained `access_token`). However we only use a single endpoint as follow:
+We allow user to update their `email` and `password` accordingly (user already logged in the app and posessed `access_token`). However we only use a single endpoint as follow:
 
 * Endpoint: `/api/v1/user`
 * Method: `PUT` or `PATCH`
 * Params: `*access_token`, (`*email` | `*password`, `*old_password`)
-* NOTE: this action is mutual exclusive between `email` and `password`. It only update one attribute at any one time. Param `email` is prioritized; it means that if this param `email` is given, it will ignore *change password* option. Therefore client should have two separated calls: one is for changing `email` and another is for changing `password`. `old_password` is required for changing password case.
+* NOTE: this action is mutual exclusive between `email` and `password`. It only update **ONE** *attribute* at any one time. Parameter `email` is prioritized; it means that if this param `email` is given, it will ignore *change password* option. Therefore client should have two separated calls: one is for changing `email` and another is for changing `password`. `old_password` is required for *changing password* case.
 
 For successful response with HTTP status of `200`:
 ```javascript
@@ -552,4 +555,3 @@ end
 =====
 # TODO
 * reading the agreeable specs and update
-* split error case into detail code for login (verified)
