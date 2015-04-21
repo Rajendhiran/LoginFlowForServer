@@ -280,22 +280,21 @@ For failed response (no email or password provided) with HTTP status of `400`:
 ```
 
 
-
-
 ### Reset Password
-This happens when user requests for *forget password* feature. The flow of this is that `client` mobile application calls forgetting password api which in turn sends out email to the user to verify authenticity of request. This is as far as the client app does the job, and the rest will be based upon web interface.
+This happens when user requests for *forget password* feature. The flow of this is that `client` mobile application calls forgetting password API which in turn sends out email to the user to verify authenticity of request. This is as far as the client app does the job, and the rest will be based upon web interface.
 
 ```
-1. App requests password change (through api) to server.
-2. Server sends out email for user to verify
-3. User receives email and activates the link
-4. User (standing on the page from previous clicked email link) changes the new password.
-5. The page shows 'success action' and does nothing else
-6. User needs to switch to the app manually
+1. app requests password change (through API) to server.
+2. server sends out email for user to verify
+3. user receives email and activates the link
+4. user (standing on the page from previous clicked email link) changes the new password.
+5. page shows 'success action' and does nothing else
+6. user needs to switch to the app manually
 ```
 
 #### Resetting Password API
 Server needs to implement the following API so that client can request in case of forgetting password:
+
 * Endpoint: `/api/v1/user/forget_password`
 * Method: `POST`
 * Params: `*email`
@@ -319,11 +318,11 @@ For failed response with HTTP status of `400`:
 ```
 
 #### Resending Verification Email
-This api is the same as resetting password api. You just need to issue the same call as this is transparent from user of view.
+This API is the same as *resetting password* API. You just need to issue the *same* call request as this is transparent from user of view.
 
 
 ### Sync Facebook account after logging Email/Password
-This is used when user wants to synchronize/link her facebook login to email/password that she's currently logged in.
+This is used when user wants to synchronize/link her Facebook login to email/password that she's currently logged in.
 
 * Endpoint: `/api/v1/user/sync_facebook`
 * Method: `PUT`
