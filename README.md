@@ -322,7 +322,7 @@ This API is the same as *resetting password* API. You just need to issue the *sa
 
 
 ### Sync Facebook account after logging Email/Password
-This is used when user wants to synchronize/link her Facebook login to email/password that she's currently logged in.
+This is used when user wants to *synchronize*/*link* her Facebook login to `email` that she's currently logged in.
 
 * Endpoint: `/api/v1/user/sync_facebook`
 * Method: `PUT`
@@ -355,10 +355,6 @@ For failed response (account has been linked before) with HTTP status of `400`:
   }
 }
 ```
-
-
-
-
 
 
 ## Error Code Standardization
