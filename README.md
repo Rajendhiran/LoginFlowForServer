@@ -358,7 +358,13 @@ For failed response (account has been linked before) with HTTP status of `400`:
 
 
 ## Error Code Standardization
-A common practice in api is that we have notion of **HTTP status code** and **Application status code**. The *HTTP status code* refers to the standard reference universally used in HTTP protocol to notify the client about server's response status. i.e. To tell if request is successful, there is something wrong with request inputs or server went into the wrong state. *Application status code* refers to specific application state once server responds to the client. e.g. Server can reply with HTTP status code of `400` (`Bad Request`) to hint the client that there might be something wrong with input of the request, but it does not specifically mention what the wrong input is. Application status code comes into play for this by specifically stating the application status code as (**say** `4001`) which means **email is invalid** defined in certain application. **HTTP status code** is understood by standard libraries used to manipulate the blocks of code. However, **Application status code** is defined on application basis and its definition really depends on organization itself. Since it is repetitive across applications that we develop and to minimize confusion for client usage, we propose the following Application Status Code:
+A common practice in API is that we have notion of **HTTP Status Code** and **Application Status Code**.
+
+*HTTP Status Code* refers to the standard reference universally used in HTTP protocol to notify the client (browser/app) about server's response status. i.e. To tell if request is successful, there is something wrong with request inputs, or server went into the wrong state.
+
+*Application Status Code* refers to specific application state once server responds to the client. e.g. Server can reply with HTTP status code of `400` (`Bad Request`) to hint the client that there might be something wrong with inputs of the request, but it does not specifically mention what the wrong input is. Application status code comes into play for this by specifically stating the application status code as (*say* `49801`) which means *token is expired* defined in certain application.
+
+HTTP status code is understood by standard libraries used to manipulate the blocks of code. However, Application status code is defined on application basis and its definition really depends on organization itself. Since it is repetitive across applications that we develop, and to minimize confusion for client usage, we propose the following *Application Status Code*:
 
 ```ruby
 SUCCESS = 0 # http `ok` is 200, but common practice for other industries is 0.
@@ -366,7 +372,7 @@ SUCCESS = 0 # http `ok` is 200, but common practice for other industries is 0.
 BAD_REQUEST = 40000 # general bad request and this is generally invalid input parameters from client
 BAD_REQUEST_EMPTY_PARAMS = 40001 # required parameters are empty
 BAD_REQUEST_DUPLICATE_RECORD = 40002 # duplicate record
-BAD_REQUEST_DUPLICATE_RECORD_FB = 40003 # duplicate record for facebook
+BAD_REQUEST_DUPLICATE_RECORD_FB = 40003 # duplicate record for Facebook
 
 UNAUTHORIZED = 40100 # general unauthorized request
 UNAUTHORIZED_UNVERIFIED = 40101 # record/user is not verified/confirmed
@@ -379,13 +385,15 @@ UNPROCESSABLE_ENTITY = 42200 # server cannot save the entity due to validation
 
 INVALID_TOKEN = 49800 # general invalid token
 INVALID_TOKEN_EXPIRED = 49801 # invalid expired token
-INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. facebook's token
+INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. Facebook's token
 INVALID_PASSWORD = 49802 # invalid password, not validation
 ```
 
 The rational is that we peg prefix HTTP status code with 2 digits of specific error type depending on the nature of HTTP status code. e.g. `RECORD_NOT_FOUND = 40400` corresponds to HTTP status code of `404` meaning `Not Found`. The last two digits can be used to identify the specific nature of the error type in which this case `00` is general case of record not found in database.
 
 For consistency, we will try to provide as many *Application Status Code* as possible, but you are free to define custom status code on application basis too.
+
+
 
 ## Implementation
 The flow of this login is supposed to be used or referenced by any server side framework.
