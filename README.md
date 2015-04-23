@@ -445,9 +445,9 @@ Doorkeeper.configure do
       fail Doorkeeper::Errors::UsernamePassword::UserDoesNotExist unless user.present?
       fail Doorkeeper::Errors::UsernamePassword::InvalidPassword unless user.valid_password?(params[:password])
       fail Doorkeeper::Errors::UsernamePassword::UserNotVerified unless user.confirmed?
-
-      user
     end
+
+    user
   end
 end
 ```
