@@ -2,7 +2,7 @@
 The goal of this document is to provide an overview of a consistent way for **Login Process** between `server` and `client`. It focuses on the flows, common practices and conventions of industry of authentication mechanisms rather than specific technology stack frameworks such as [Ruby on Rails](http://rubyonrails.org/), [Sails.js](http://sailsjs.org/), [Laravel](http://laravel.com/) and whatnots.
 
 ## Prototype
-The prototype of this login workflow can be found at [https://login-flow.heorkuapp.com](https://login-flow.heorkuapp.com). This prototype is meant for *mobile developers* (aka. `client` application) to implement the client side of the login process in their respective platform. *Server developers* can also leverage of the existing flow code as a guide to implement the server side as well.
+The prototype of this login workflow can be found at [https://login-flow.herokuapp.com](https://login-flow.herokuapp.com). This prototype is meant for *mobile developers* (aka. `client` application) to implement the client side of the login process in their respective platform. *Server developers* can also leverage of the existing flow code as a guide to implement the server side as well.
 
 This sample project is written in *Ruby on Rails* as a generic approach to bridge between server and client and therefore server developers should feel free **NOT** to *strictly* follow everything here. However, one should note that other than specific implementations, we should stick to common API contract interface elaborated below.
 
