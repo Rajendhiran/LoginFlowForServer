@@ -135,7 +135,7 @@ Response with (failed [email is not found in server's database]) HTTP status: `4
 Response with (failed [password supplied is not valid]) HTTP status: `401`
 ```json
 {
-  "status_code": 49802,
+  "status_code": 49803,
   "error": {
     "message": "username_password_invalid_password: Invalid password"
   }
@@ -386,7 +386,7 @@ UNPROCESSABLE_ENTITY = 42200 # server cannot save the entity due to validation
 INVALID_TOKEN = 49800 # general invalid token
 INVALID_TOKEN_EXPIRED = 49801 # invalid expired token
 INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. Facebook's token
-INVALID_PASSWORD = 49802 # invalid password, not validation
+INVALID_PASSWORD = 49803 # invalid password, not validation
 ```
 
 The rational is that we peg prefix HTTP status code with 2 digits of specific error type depending on the nature of HTTP status code. e.g. `RECORD_NOT_FOUND = 40400` corresponds to HTTP status code of `404` meaning `Not Found`. The last two digits can be used to identify the specific nature of the error type in which this case `00` is general case of record not found in database.

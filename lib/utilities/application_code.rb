@@ -19,7 +19,7 @@ module Utilities
     INVALID_TOKEN = 49800 # general invalid token
     INVALID_TOKEN_EXPIRED = 49801 # invalid expired token
     INVALID_TOKEN_THIRD_PARTY = 49802 # general invalid token for 3rd party. e.g. facebook's token
-    INVALID_PASSWORD = 49802 # invalid password, not validation
+    INVALID_PASSWORD = 49803 # invalid password, not validation
   end
 end
 
