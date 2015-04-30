@@ -12,4 +12,8 @@ class HomeController < ApplicationController
 
   def successful_password_reset
   end
+
+  def successful_confirmation
+    # check if it's a mobile or not
+  end
 end
