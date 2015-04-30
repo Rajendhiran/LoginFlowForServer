@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
   use_doorkeeper scope: 'api/v1/oauth' do
     skip_controllers :applications, :authorized_applications, :authorizations
+    # or you can use below `controllers` instead
+    # controllers :oauth
   end
 
   devise_for :users, controllers: {
-    passwords: "custom_devise/passwords",
-    confirmations: "custom_devise/confirmations"
+    # customized controllers so that we can override to redirecting parts
+    passwords: "custom_devise/passwords", # for redirecting to path after successfully reset passowrd
+    confirmations: "custom_devise/confirmations" # for redirecting to path after successfully confirm email
   }
 
   namespace :api, defaults: { format: :json } do

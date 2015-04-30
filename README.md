@@ -163,7 +163,7 @@ Our goal here is to support *Facebook* and *Email/Password*, and therefore other
 ## Database Schema
 In this login workflow, we do not dictate the database vendor or type (relational, document, key/value, graph) to be used, and it is really your choice for appropriate scenario in different applications. However, there should be a consistent database schema vectors that allow uniform implementation across applications.
 
-In general applications that require authentication, we need to define some model or database table **user**. Conventionally, we define table as `users` (plural) and model as `User` (singular). This table/model holds information about end users who consume the application, and most of times, it is considered to be a `God` model/class because your application is commonly centered around the user. Therefore, there are high couplings between `User` model and other models.
+In general applications that require authentication, we need to define some model or database table **user**. Conventionally, we define table as `users` (plural) and model as `User` (singular). This table/model holds information about end users who consume the application, and most of times, it is considered to be a **God** model/class because your application is commonly centered around the user. Therefore, there are high couplings between `User` model and other models.
 
 You do not have to name your user model as `User`, and you probably call it as `Member`. Nonetheless, almost all applications refer this model as `User`; thus we should just follow the crowd.
 
@@ -466,9 +466,6 @@ Client side does not need to supply `client_id` and `client_secret`, and the app
 
 
 
-
-
-
 Since we don't need to manage applications `/oauth/applications`, we can disable the routes as follow:
 ```ruby
 Rails.application.routes.draw do
@@ -490,7 +487,11 @@ class Api::ApiController < ActionController::Base
 end
 ```
 
-### Resetting Password for `Devise`
+### Devise Settings
+You can use other authentication system gems such as [authlogic](https://github.com/binarylogic/authlogic), but nowadays [devise](https://github.com/plataformatec/devise) is so common that it is almost the *Rails industry standard* for authentication. Therefore, we will focus on implementation on devise only in this document.
+
+
+#### Resetting Password for `Devise`
 We can implement resetting password in `devise` by using controller `PasswordsController` and views `passwords`. This is **NOT** to be confused with *editing password once user logged in* in system. Editing password is not Resetting password, and editing password is a web feature; thus it needs to be configured with controller `RegistrationsController`. Before you can edit/customize controller or view, you need to generate both of them as following:
 
 ```bash
@@ -523,9 +524,13 @@ First of all, we need to set `config/routes.rb` to consume `app/controllers/cust
 ```ruby
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    passwords: "custom_devise/passwords" # to use customize passwords controller
+    # customized controllers so that we can override to redirecting parts
+    passwords: "custom_devise/passwords", # for redirecting to path after successfully reset passowrd
+    confirmations: "custom_devise/confirmations" # for redirecting to path after successfully confirm email
   }
+
   get 'successful_password_reset' => 'home#successful_password_reset' # you customize this to whatever you want.
+  get 'successful_confirmation' => 'home#successful_confirmation'
 end
 ```
 
@@ -543,8 +548,18 @@ def after_resetting_password_path_for(resource)
 end
 ```
 
+In the same way for confirmation in `app/controllers/custom_devise/confirmations_controller.rb`, you can just update method `after_confirmation_path_for`:
 
+```ruby
+## originally commented out
+# def after_confirmation_path_for(resource_name, resource)
+#   super(resource_name, resource)
+# end
 
+def after_confirmation_path_for(resource)
+  successful_confirmation_path # set the path you want to redirect after successfully confirming the email.
+end
+```
 
 
 
@@ -557,4 +572,3 @@ end
 
 =====
 # TODO
-* reading the agreeable specs and update
