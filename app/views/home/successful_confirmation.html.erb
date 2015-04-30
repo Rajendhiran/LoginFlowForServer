@@ -4,3 +4,7 @@ hello...
 <p>
   this is after confirmation
 </p>
+
+<% if client_mobile? %>
+  <%= link_to "Go to your mobile app", "com.2359media.LoginKit://login" %>
+<% end %>

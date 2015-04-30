@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   before_action :authenticate_user!, only: [:protected_page]
+  helper_method :client_mobile?
 
   def index
   end
@@ -14,6 +15,12 @@ class HomeController < ApplicationController
   end
 
   def successful_confirmation
-    # check if it's a mobile or not
+  end
+
+
+  private
+
+  def client_mobile?
+    request.user_agent.to_s.downcase =~ /android|iphone|ipad/
   end
 end
